@@ -23,7 +23,7 @@ WITH session_data AS (
     -- Bounce (single pageview, no engagement)
     COUNT(DISTINCT page_location) = 1 AND SUM(engagement_time_msec) < 1000 as is_bounce
 
-  FROM `your-gcp-project-id.analytics_mart.stg_ga4_user_sessions`
+  FROM `your-gcp-project-id.analytics_mart.stg_ga4_flattened_events`
   GROUP BY user_pseudo_id, ga_session_id
 )
 SELECT 
