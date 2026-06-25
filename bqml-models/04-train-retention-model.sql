@@ -2,7 +2,7 @@
 -- DESCRIPTION: Trains a native BQML Logistic Regression model to calculate retention velocity.
 -- SNAPSHOT WINDOW: Anchored to a 2-day relative inactivity window based on dataset ceiling boundaries.
 
-CREATE OR REPLACE MODEL `your-gcp-project.g4_demo.retention_velocity_model`
+CREATE OR REPLACE MODEL `your-gcp-project.your_fintech_dataset.retention_velocity_model`
 OPTIONS(
   MODEL_TYPE = 'LOGISTIC_REG',
   INPUT_LABEL_COLS = ['is_churned']
@@ -10,7 +10,7 @@ OPTIONS(
 
 WITH data_ceiling AS (
   SELECT MAX(last_seen) as max_last_seen_raw
-  FROM `g4-architect-sandbox.g4_demo.user_features`
+  FROM `your-gcp-project.your_fintech_dataset.mart_fintech_survival_features`
 ),
 
 prepared_matrix AS (
@@ -28,7 +28,7 @@ prepared_matrix AS (
     COALESCE(f.cart_rate, 0.0) AS cart_rate,
     COALESCE(f.sessions_per_day, f.total_sessions) AS sessions_per_day,
     COALESCE(f.primary_country, 'Unknown') AS primary_country
-  FROM `your-gcp-project.g4_demo.user_features` f
+  FROM `your-gcp-project.your_fintech_dataset.mart_fintech_survival_features` f
   CROSS JOIN data_ceiling c
   WHERE f.total_sessions IS NOT NULL
 )
