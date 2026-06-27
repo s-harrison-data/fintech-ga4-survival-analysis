@@ -26,7 +26,7 @@ SELECT
   -- 5. CATEGORICAL COVARIATES
   COALESCE(primary_country, 'Unknown') AS primary_country
 
-FROM `g4-architect-sandbox.g4_demo.user_features`
+FROM `your-gcp-project.your_fintech_dataset.mart_fintech_survival_features`
 -- Train model on an 80% split using a deterministic hash for reproducibility
 WHERE ABS(MOD(FARM_FINGERPRINT(user_pseudo_id), 10)) < 8;
 
