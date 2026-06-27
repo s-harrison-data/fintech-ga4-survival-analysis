@@ -1,9 +1,9 @@
-MERGE `g4-architect-sandbox.g4_demo.user_features` T
+MERGE `your-gcp-project.your_fintech_dataset.mart_fintech_survival_features` T
 USING (
   WITH data_bounds AS (
     -- 1. Identify the current absolute timestamp ceiling of your raw data
     SELECT MAX(event_timestamp) as max_raw_timestamp
-    FROM `g4-architect-sandbox.g4_demo.flattened_events`
+    FROM `your-gcp-project.your_fintech_dataset.flattened_events`
   ),
 
   time_windows AS (
@@ -22,7 +22,7 @@ USING (
   -- 3. DELTA IDENTIFICATION: Find ONLY users active since the last run (Strict INT64 Comparison)
   affected_users AS (
     SELECT DISTINCT f.user_pseudo_id
-    FROM `g4-architect-sandbox.g4_demo.flattened_events` f
+    FROM `your-gcp-project.your_fintech_dataset.flattened_events` f
     CROSS JOIN time_windows tw
     WHERE f.event_timestamp > tw.incremental_lookback_micros
   ),
@@ -34,7 +34,7 @@ USING (
       f.country,
       COUNT(*) as country_count,
       ROW_NUMBER() OVER (PARTITION BY f.user_pseudo_id ORDER BY COUNT(*) DESC, f.country ASC) as country_rank
-    FROM `g4-architect-sandbox.g4_demo.flattened_events` f
+    FROM `your-gcp-project.your_fintech_dataset.flattened_events` f
     INNER JOIN affected_users au ON f.user_pseudo_id = au.user_pseudo_id
     CROSS JOIN time_windows tw
     WHERE f.country IS NOT NULL
@@ -58,7 +58,7 @@ USING (
       COUNT(DISTINCT CASE WHEN f.event_name = 'purchase' THEN f.ga_session_id END) as purchase_sessions,
       COUNT(DISTINCT CASE WHEN f.event_name = 'add_to_cart' THEN f.ga_session_id END) as cart_sessions,
       COUNT(DISTINCT f.page_location) as unique_pages_viewed
-    FROM `g4-architect-sandbox.g4_demo.flattened_events` f
+    FROM `your-gcp-project.your_fintech_dataset.flattened_events` f
     INNER JOIN affected_users au ON f.user_pseudo_id = au.user_pseudo_id
     CROSS JOIN time_windows tw
     WHERE f.event_timestamp <= tw.feature_cutoff_micros
@@ -68,7 +68,7 @@ USING (
   -- 6. RECALCULATE LABELS: Check the updated 2-day target window
   user_label_window AS (
     SELECT DISTINCT f.user_pseudo_id
-    FROM `g4-architect-sandbox.g4_demo.flattened_events` f
+    FROM `your-gcp-project.your_fintech_dataset.flattened_events` f
     INNER JOIN affected_users au ON f.user_pseudo_id = au.user_pseudo_id
     CROSS JOIN time_windows tw
     WHERE f.event_timestamp > tw.feature_cutoff_micros
