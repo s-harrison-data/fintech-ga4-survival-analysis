@@ -4,7 +4,7 @@
 -- Data Layer: Materializes an optimized View to serve as the direct data source for Looker Studio.
 -- ========================================================================================
 
-CREATE OR REPLACE VIEW `g4-architect-sandbox.g4_demo.v_vc_retention_risk_factors` AS 
+CREATE OR REPLACE VIEW `your-gcp-project.your_fintech_dataset.v_vc_retention_risk_factors` AS 
 
 SELECT
   -- 1. FEATURE IDENTIFICATION
@@ -32,7 +32,7 @@ SELECT
 
 FROM
   -- Calls ADVANCED_WEIGHTS to expose flat categories and p-values natively
-  ML.ADVANCED_WEIGHTS(MODEL `g4-architect-sandbox.g4_demo.retention_velocity_model`)
+  ML.ADVANCED_WEIGHTS(MODEL `your-gcp-project.your_fintech_dataset.retention_velocity_model`)
 
 WHERE 
   -- Excludes the intercept baseline row to cleanly isolate behavioral covariates
