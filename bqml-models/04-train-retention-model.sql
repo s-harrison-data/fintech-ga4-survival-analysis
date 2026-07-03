@@ -1,9 +1,15 @@
 -- Create or replace a Native BigQuery ML Logistic Regression Model
-CREATE OR REPLACE MODEL `your-gcp-project.your_fintech_dataset.retention_velocity_model`
+CREATE OR REPLACE MODEL `g4-architect-sandbox.g4_demo.retention_velocity_model`
 OPTIONS(
   MODEL_TYPE = 'LOGISTIC_REG',
   INPUT_LABEL_COLS = ['is_churned'],
-  DATA_SPLIT_METHOD = 'NO_SPLIT' -- Forces BQML to respect our deterministic validation split
+  DATA_SPLIT_METHOD = 'NO_SPLIT', -- Forces BQML to respect our deterministic validation split
+  AUTO_CLASS_WEIGHTS = TRUE,     -- Corrects for class imbalance in churn data
+  
+  -- The Holy Trinity for ML.ADVANCED_WEIGHTS p-values:
+  CALCULATE_P_VALUES = TRUE,
+  CATEGORY_ENCODING_METHOD = 'DUMMY_ENCODING', -- Strips category nesting natively
+  L1_REG = 0.0                                 -- Drops regularization to compute pure standard error
 ) AS
 
 SELECT 
@@ -26,7 +32,7 @@ SELECT
   -- 5. CATEGORICAL COVARIATES
   COALESCE(primary_country, 'Unknown') AS primary_country
 
-FROM `your-gcp-project.your_fintech_dataset.mart_fintech_survival_features`
+FROM `g4-architect-sandbox.g4_demo.user_features`
 -- Train model on an 80% split using a deterministic hash for reproducibility
 WHERE ABS(MOD(FARM_FINGERPRINT(user_pseudo_id), 10)) < 8;
 
