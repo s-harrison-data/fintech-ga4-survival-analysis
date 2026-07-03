@@ -1,12 +1,16 @@
-Fintech GA4 Customer Survival Analysis (BigQuery & BQML)
+# Series A/B Fintech Customer Intelligence: Churn, Deposit Velocity & Survival Analysis
+A Production-Grade GA4, BigQuery, and BQML Customer Intelligence Engine
 
-Business Case
-Series A/B fintech startups face highly volatile deposit habits. Traditional binary churn models (logistic regression) fail because they cannot account for "censored data"—users who are slowing down their deposit velocity but haven't officially closed their accounts yet. 
+## Executive Summary & Founder/Eng Alignment
+At the Series A/B stage, fintech growth lives or dies by deposit retention and active user velocity. Traditional binary churn models are too reactive—by the time a model flags a user as "churned," their capital has already left the ecosystem. 
 
-This project builds a Cox Proportional Hazards Model natively within Google BigQuery (BQML) using raw, nested Google Analytics 4 clickstream data. It predicts the *time-to-event velocity of deposit deceleration*, allowing growth teams to calculate accurate Customer Lifetime Value (LTV) and protect startup runway.
+This project demonstrates a 100% cloud-native Customer Intelligence pipeline designed specifically to model customer survival and transaction velocity natively inside Google BigQuery. By deploying Discrete-Time Survival Analysis, we bypass platform constraints to build a time-to-event engine using native BigQuery Logistic Regression (`LOGISTIC_REG`).
 
-Data Infrastructure Architecture
+For the CEO / Founders:** Move from reactive churn tracking to proactive intervention. This engine surfaces the exact behavioral thresholds (e.g., specific drops in login frequency or feature engagement) that accelerate deposit deceleration, allowing you to defend your net deposit volume and optimize LTV before capital runs dry.
+For the Head of Engineering:** Zero data egress, zero external Python pipeline maintenance, and zero server management. The entire infrastructure—from raw GA4 clickstream flattening to machine learning inference—runs entirely inside BigQuery via optimized SQL, ensuring a clean, low-latency, secure data layer.
+
+## Core Deliverables & Architecture
 1. Flattening Layer: Unpacks nested GA4 event parameters and user arrays using SQL `UNNEST()`.
 2. Sessionization Layer: Stitches user clickstreams into chronological product sessions.
-3. Feature Store Matrix: Engineers categorical and numerical customer covariates (e.g., login frequency, average deposit size, KYC status).
-4. Predictive Modeling: Trains a cloud-native `COX_PH` survival engine to output hazard ratios for investor dashboards.
+3. Feature Store Matrix: Engineers core fintech covariates (e.g., login frequency, purchase/deposit rates) alongside automated day-zero timeline stabilization constraints.
+4. Predictive Modeling: Trains a cloud-native `LOGISTIC_REG` survival engine to output advanced Odds Ratios and velocity-of-dormancy risk metrics for investor decks and growth dashboards.
