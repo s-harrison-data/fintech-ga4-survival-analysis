@@ -10,8 +10,8 @@ SELECT
   -- 1. CLEAN TARGET: Pulls directly from the leak-free merge table field
   churned AS is_churned,
   
-  -- 2. TIMELINE COVARIATE
-  CAST(days_since_first_visit AS FLOAT64) AS timeline_tenure_days,
+  -- 2. TIMELINE COVARIATE (Mitigating Day 0 anomalies with a natural floor of 1)
+  CAST(GREATEST(days_since_first_visit, 1) AS FLOAT64) AS timeline_tenure_days,
   
   -- 3. NUMERIC COVARIATES
   CAST(total_events AS FLOAT64) AS total_events,
