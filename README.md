@@ -1,2 +1,2 @@
 # Series A/B Fintech Customer Intelligence: Churn, Deposit Velocity & Survival Analysis
-# A Production-Grade GA4, BigQuery, and BQML Customer Intelligence Engine
+# An End-to-End Production Engine Built by a Customer Intelligence Consultant for Neobanks, WealthTech, and Lending Platforms*
